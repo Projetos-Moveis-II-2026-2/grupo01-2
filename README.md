@@ -6,8 +6,7 @@ principais.
 
 ## O que está nesta entrega (Etapa 1)
 
-Conforme a tabela de entregas da proposta (seção 6), a Etapa 1 cobre
-**Adição, Subtração e Escolha Certa**. Para viabilizar a navegação completa
+Para viabilizar a navegação completa
 do app desde já, também foram incluídas as telas de abertura/login/cadastro
 e um placeholder de Perfil:
 
@@ -24,17 +23,7 @@ e um placeholder de Perfil:
   uma com alternativas de escolha.
 - **Perfil** → tela placeholder com dados mockados, apenas para permitir a
   navegação até essa aba.
-
-### O que ainda não está incluído (propositalmente)
-
-Para respeitar o cronograma de entregas da proposta (seção 6), os itens
-abaixo **não** fazem parte desta etapa e aparecem como pontos de extensão
-no código (comentários `// Etapa 2/3/4`):
-
-- Feedback de resposta com mensagens de orientação (Etapa 2).
-- Consequência da escolha detalhada, sistema de reforço (pontos,
-  estrelas, medalhas) e pontuação/progresso (Etapa 3).
-- Perfil completo com progresso e histórico (Etapa 4).
+- Feedback de resposta com mensagens de orientação.
 
 
 ## Como rodar
