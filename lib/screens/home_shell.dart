@@ -38,12 +38,12 @@ class _HomeShellState extends State<HomeShell> {
         ),
       ),
       bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
+        decoration: BoxDecoration(
+          color: AppColors.surface,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black12,
+              color: AppColors.textPrimary.withValues(alpha: 0.08),
               blurRadius: 12,
               offset: Offset(0, -3),
             ),
@@ -55,8 +55,8 @@ class _HomeShellState extends State<HomeShell> {
             selectedIndex: _selectedIndex,
             onDestinationSelected: (index) =>
                 setState(() => _selectedIndex = index),
-            backgroundColor: Colors.white,
-            indicatorColor: AppColors.honeyLight,
+            backgroundColor: AppColors.surface,
+            indicatorColor: AppColors.primaryLight,
             elevation: 0,
             labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
             destinations: const [

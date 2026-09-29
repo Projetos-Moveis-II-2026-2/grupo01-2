@@ -31,9 +31,9 @@ class AppLogo extends StatelessWidget {
             width: size * 0.62,
             height: size * 0.72,
             decoration: BoxDecoration(
-              color: AppColors.honey,
+              color: AppColors.reward,
               borderRadius: BorderRadius.circular(size),
-              border: Border.all(color: AppColors.bark, width: size * 0.02),
+              border: Border.all(color: AppColors.textPrimary, width: size * 0.02),
             ),
             child: Center(
               child: Text(
@@ -41,7 +41,7 @@ class AppLogo extends StatelessWidget {
                 style: TextStyle(
                   fontSize: size * 0.28,
                   fontWeight: FontWeight.w900,
-                  color: AppColors.bark,
+                  color: AppColors.textPrimary,
                 ),
               ),
             ),
@@ -53,7 +53,7 @@ class AppLogo extends StatelessWidget {
               width: size * 0.5,
               height: size * 0.22,
               child: CustomPaint(
-                painter: _AntennaPainter(color: AppColors.bark),
+                painter: _AntennaPainter(color: AppColors.textPrimary),
               ),
             ),
           ),
@@ -67,9 +67,9 @@ class AppLogo extends StatelessWidget {
       width: size * 0.34,
       height: size * 0.5,
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.85),
+        color: AppColors.surface.withValues(alpha: 0.85),
         borderRadius: BorderRadius.circular(size * 0.3),
-        border: Border.all(color: AppColors.honeyDark, width: 1.5),
+        border: Border.all(color: AppColors.accent, width: 1.5),
       ),
     );
   }

@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
               'MercaMática',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.w800,
-                    color: AppColors.bark,
+                    color: AppColors.textPrimary,
                   ),
             ),
             const SizedBox(height: 32),
@@ -50,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
               height: 28,
               child: CircularProgressIndicator(
                 strokeWidth: 3,
-                color: AppColors.honeyDark,
+                color: AppColors.primary,
               ),
             ),
           ],

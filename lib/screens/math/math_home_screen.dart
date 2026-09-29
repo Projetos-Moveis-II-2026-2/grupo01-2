@@ -35,14 +35,14 @@ class MathHomeScreen extends StatelessWidget {
                         icon: Icons.star_rounded,
                         label: 'pontos',
                         value: '${progress.profile.score}',
-                        color: AppColors.honey,
+                        color: AppColors.reward,
                       ),
                       const SizedBox(width: 12),
                       StatBadge(
                         icon: Icons.task_alt_rounded,
                         label: 'atividades',
                         value: '${progress.activitiesCompleted}',
-                        color: AppColors.success,
+                        color: AppColors.primary,
                       ),
                     ],
                   ),
@@ -101,12 +101,12 @@ class _ProgressHint extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.honeyLight.withValues(alpha: 0.52),
+        color: AppColors.secondaryLight,
         borderRadius: BorderRadius.circular(18),
       ),
       child: Row(
         children: [
-          const Icon(Icons.lightbulb_outline, color: AppColors.honeyDark),
+          const Icon(Icons.lightbulb_outline, color: AppColors.secondary),
           const SizedBox(width: 12),
           Expanded(
             child: Text(

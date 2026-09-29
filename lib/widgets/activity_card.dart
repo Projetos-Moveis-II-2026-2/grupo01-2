@@ -18,7 +18,7 @@ class ActivityCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isAddition = operation == MathOperation.addition;
-    final accent = isAddition ? AppColors.honey : AppColors.success;
+    final accent = isAddition ? AppColors.primary : AppColors.secondary;
 
     return Card(
       clipBehavior: Clip.antiAlias,

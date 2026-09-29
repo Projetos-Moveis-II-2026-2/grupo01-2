@@ -55,8 +55,8 @@ class _ScenarioCard extends StatelessWidget {
             children: [
               const CircleAvatar(
                 radius: 24,
-                backgroundColor: AppColors.honeyLight,
-                child: Icon(Icons.savings_outlined, color: AppColors.bark),
+                backgroundColor: AppColors.secondaryLight,
+                child: Icon(Icons.savings_outlined, color: AppColors.secondary),
               ),
               const SizedBox(width: 16),
               Expanded(

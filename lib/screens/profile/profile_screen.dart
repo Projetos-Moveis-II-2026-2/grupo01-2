@@ -33,11 +33,11 @@ class ProfileScreen extends StatelessWidget {
                     children: [
                       const CircleAvatar(
                         radius: 44,
-                        backgroundColor: AppColors.honeyLight,
+                        backgroundColor: AppColors.primaryLight,
                         child: Icon(
                           Icons.person,
                           size: 48,
-                          color: AppColors.bark,
+                          color: AppColors.primary,
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -139,8 +139,8 @@ class _ProgressCard extends StatelessWidget {
               value: progress.progress,
               minHeight: 10,
               borderRadius: BorderRadius.circular(8),
-              backgroundColor: AppColors.honeyLight,
-              color: AppColors.honeyDark,
+              backgroundColor: AppColors.primaryLight,
+              color: AppColors.primary,
             ),
             const SizedBox(height: 8),
             Text(
@@ -178,7 +178,7 @@ class _StatCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(icon, color: AppColors.honeyDark),
+              Icon(icon, color: AppColors.primary),
               const SizedBox(height: 8),
               Text(value, style: Theme.of(context).textTheme.headlineSmall),
               Text(label, style: Theme.of(context).textTheme.bodySmall),
@@ -206,8 +206,8 @@ class _ActivityHistoryCard extends StatelessWidget {
     return Card(
       child: ListTile(
         leading: const CircleAvatar(
-          backgroundColor: AppColors.honeyLight,
-          child: Icon(Icons.shopping_basket_outlined, color: AppColors.bark),
+          backgroundColor: AppColors.primaryLight,
+          child: Icon(Icons.shopping_basket_outlined, color: AppColors.primary),
         ),
         title: Text(record.activityName),
         subtitle: Text(
@@ -218,7 +218,7 @@ class _ActivityHistoryCard extends StatelessWidget {
         trailing: Text(
           '+${record.pointsEarned}',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: AppColors.honeyDark,
+                color: AppColors.textPrimary,
                 fontWeight: FontWeight.w700,
               ),
         ),
@@ -235,12 +235,12 @@ class _NoticeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: AppColors.honeyLight,
+      color: AppColors.secondaryLight,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            const Icon(Icons.info_outline, color: AppColors.bark),
+            const Icon(Icons.info_outline, color: AppColors.secondary),
             const SizedBox(width: 12),
             Expanded(child: Text(message)),
           ],

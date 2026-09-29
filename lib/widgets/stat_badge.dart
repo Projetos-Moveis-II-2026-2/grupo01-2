@@ -13,7 +13,7 @@ class StatBadge extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.value,
-    this.color = AppColors.honey,
+    this.color = AppColors.reward,
   });
 
   @override
@@ -22,10 +22,14 @@ class StatBadge extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         decoration: BoxDecoration(
-          color: AppColors.card,
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: const [
-            BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 3)),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.textPrimary.withValues(alpha: 0.08),
+              blurRadius: 8,
+              offset: Offset(0, 3),
+            ),
           ],
         ),
         child: Row(

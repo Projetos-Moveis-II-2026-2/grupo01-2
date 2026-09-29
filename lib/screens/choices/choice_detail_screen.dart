@@ -175,7 +175,7 @@ class _ChoiceOptionButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Material(
-        color: isHighlighted ? AppColors.honeyLight : AppColors.card,
+        color: isHighlighted ? AppColors.primaryLight : AppColors.surface,
         borderRadius: BorderRadius.circular(18),
         child: InkWell(
           borderRadius: BorderRadius.circular(18),
@@ -187,19 +187,31 @@ class _ChoiceOptionButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(18),
               border: Border.all(
                 color: isHighlighted
-                    ? AppColors.success
-                    : AppColors.honeyDark.withValues(alpha: 0.3),
+                    ? AppColors.primary
+                    : AppColors.border,
                 width: 2,
               ),
             ),
             alignment: Alignment.center,
-            child: Text(
-              option.label,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (isHighlighted) ...[
+                  const Icon(Icons.check_circle_outline,
+                      color: AppColors.primary),
+                  const SizedBox(width: 8),
+                ],
+                Flexible(
+                  child: Text(
+                    option.label,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textPrimary,
+                        ),
                   ),
+                ),
+              ],
             ),
           ),
         ),
@@ -222,19 +234,19 @@ class _FeedbackCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: isHint ? AppColors.honeyLight : AppColors.success,
+      color: isHint ? AppColors.secondaryLight : AppColors.primaryLight,
       child: Padding(
         padding: const EdgeInsets.all(18),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, color: AppColors.bark),
+            Icon(icon, color: AppColors.textPrimary),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 message,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: AppColors.bark,
+                      color: AppColors.textPrimary,
                     ),
               ),
             ),

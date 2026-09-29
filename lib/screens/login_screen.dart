@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
               'Login',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    color: AppColors.honeyDark,
+                    color: AppColors.primary,
                     fontWeight: FontWeight.w800,
                     fontSize: 56,
                     height: 1,
@@ -93,8 +93,8 @@ class _LoginScreenState extends State<LoginScreen> {
             PrimaryButton(
               label: 'Log in',
               onPressed: _handleLogin,
-              backgroundColor: AppColors.success,
-              foregroundColor: Colors.white,
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.textPrimary,
               borderRadius: 11,
             ),
             const SizedBox(height: 74),

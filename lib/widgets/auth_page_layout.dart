@@ -45,7 +45,7 @@ class AuthPageLayout extends StatelessWidget {
                         if (showIllustration) ...[
                           SizedBox(height: screenWidth * 0.21),
                           Image.asset(
-                            'assets/images/mercadinho_ilustracao.png',
+                            'assets/images/mercadinho_ilustracao_paleta.png',
                             width: double.infinity,
                             fit: BoxFit.fitWidth,
                             // O asset real pode ser substituído aqui sem
@@ -65,7 +65,7 @@ class AuthPageLayout extends StatelessWidget {
                               minHeight: math.max(560, constraints.maxHeight * 0.74),
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.card,
+                              color: AppColors.surface,
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(panelRadius),
                                 topRight: Radius.circular(panelRadius),
@@ -101,12 +101,12 @@ class _AuthImagePlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 160,
-      color: AppColors.honeyLight,
+      color: AppColors.secondaryLight,
       alignment: Alignment.center,
       child: const Icon(
         Icons.storefront_rounded,
         size: 72,
-        color: AppColors.honeyDark,
+        color: AppColors.secondary,
       ),
     );
   }
@@ -122,11 +122,9 @@ class _AuthClouds extends StatelessWidget {
 }
 
 class _CloudPainter extends CustomPainter {
-  static const _cloudColor = Color(0xFFFFF4DE);
-
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = _cloudColor;
+    final paint = Paint()..color = AppColors.primaryLight.withValues(alpha: 0.5);
     final width = size.width;
 
     _drawCloud(

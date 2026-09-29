@@ -27,7 +27,7 @@ class WelcomeScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.w800,
-                      color: AppColors.bark,
+                      color: AppColors.textPrimary,
                     ),
               ),
               const SizedBox(height: 12),

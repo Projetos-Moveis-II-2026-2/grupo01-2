@@ -144,7 +144,7 @@ class _MathExerciseScreenState extends State<MathExerciseScreen> {
 
   Color? _optionColor(int option) {
     if (_answered && option == _currentQuestion.correctAnswer) {
-      return AppColors.success;
+      return AppColors.primary;
     }
     return null;
   }
@@ -160,8 +160,8 @@ class _MathExerciseScreenState extends State<MathExerciseScreen> {
           children: [
             LinearProgressIndicator(
               value: (_currentIndex + 1) / _questions.length,
-              backgroundColor: AppColors.honeyLight,
-              color: AppColors.honey,
+              backgroundColor: AppColors.primaryLight,
+              color: AppColors.primary,
               minHeight: 8,
               borderRadius: BorderRadius.circular(8),
             ),
@@ -237,8 +237,8 @@ class _OptionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final background = color ?? AppColors.card;
-    final foreground = color != null ? Colors.white : AppColors.textPrimary;
+    final background = color ?? AppColors.surface;
+    final foreground = AppColors.textPrimary;
 
     return Material(
       color: background,
@@ -251,18 +251,27 @@ class _OptionButton extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
             border: Border.all(
-              color: color ?? AppColors.honeyDark.withValues(alpha: 0.3),
+              color: color ?? AppColors.border,
               width: 2,
             ),
           ),
           alignment: Alignment.center,
-          child: Text(
-            'R\$ $value',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w800,
-              color: foreground,
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (color != null) ...[
+                const Icon(Icons.check_circle_outline, size: 21),
+                const SizedBox(width: 6),
+              ],
+              Text(
+                'R\$ $value',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                  color: foreground,
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -279,21 +288,21 @@ class _ExerciseFeedback extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: isHint ? AppColors.honeyLight : AppColors.success,
+      color: isHint ? AppColors.secondaryLight : AppColors.primaryLight,
       child: Padding(
         padding: const EdgeInsets.all(14),
         child: Row(
           children: [
             Icon(
               isHint ? Icons.lightbulb_outline : Icons.check_circle,
-              color: AppColors.bark,
+              color: AppColors.textPrimary,
             ),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
                 message,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.bark,
+                      color: AppColors.textPrimary,
                       fontWeight: FontWeight.w600,
                     ),
               ),

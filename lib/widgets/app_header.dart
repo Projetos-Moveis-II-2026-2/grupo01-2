@@ -24,7 +24,7 @@ class AppHeader extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(22),
             child: Image.asset(
-              'assets/images/mercadinho_ilustracao.png',
+              'assets/images/mercadinho_ilustracao_paleta.png',
               height: 132,
               width: double.infinity,
               fit: BoxFit.cover,
@@ -60,9 +60,9 @@ class _IllustrationPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 132,
-      color: AppColors.honeyLight,
+      color: AppColors.secondaryLight,
       alignment: Alignment.center,
-      child: const Icon(Icons.storefront, size: 56, color: AppColors.honeyDark),
+      child: const Icon(Icons.storefront, size: 56, color: AppColors.secondary),
     );
   }
 }

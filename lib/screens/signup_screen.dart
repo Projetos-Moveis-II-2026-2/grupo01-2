@@ -68,7 +68,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               'Criar uma Nova Conta',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    color: AppColors.honeyDark,
+                    color: AppColors.primary,
                     fontWeight: FontWeight.w800,
                     fontSize: 50,
                     height: 1.05,
@@ -145,8 +145,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             PrimaryButton(
               label: 'Inscrever-se',
               onPressed: _handleSignUp,
-              backgroundColor: AppColors.success,
-              foregroundColor: Colors.white,
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.textPrimary,
               borderRadius: 11,
             ),
           ],
