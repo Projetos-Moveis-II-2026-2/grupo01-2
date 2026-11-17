@@ -1,3 +1,5 @@
+import 'difficulty.dart';
+
 /// Tipos de operação matemática suportados nesta etapa.
 enum MathOperation { addition, subtraction }
 
@@ -31,11 +33,13 @@ class MathQuestion {
   final String hint;
   final List<int> options;
   final int correctAnswer;
+  final Difficulty difficulty;
 
   const MathQuestion({
     required this.prompt,
     required this.hint,
     required this.options,
     required this.correctAnswer,
+    this.difficulty = Difficulty.easy,
   });
 }

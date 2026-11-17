@@ -10,12 +10,33 @@ class UserProgressProvider extends ChangeNotifier {
   static const assistedAnswerPoints = 5;
 
   static const activityIds = <String>{
-    'addition',
-    'subtraction',
+    // Matemática — Adição
+    'addition_easy',
+    'addition_medium',
+    'addition_hard',
+    // Matemática — Subtração
+    'subtraction_easy',
+    'subtraction_medium',
+    'subtraction_hard',
+    // Escolha Certa — Fácil
     'choice_price_note',
+    'choice_coin_easy',
+    'choice_note_10',
+    'choice_coin_bread',
+    'choice_two_notes',
+    'choice_enough_money',
+    // Escolha Certa — Médio
     'choice_gift',
     'choice_promotion',
+    'choice_shopping_list',
+    'choice_compare_brands',
+    'choice_change_check',
+    // Escolha Certa — Difícil
     'choice_month_end',
+    'choice_budget',
+    'choice_saving_goal',
+    'choice_cash_discount',
+    'choice_snack_vs_cook',
   };
 
   final LocalUserStorage _storage;
@@ -55,6 +76,30 @@ class UserProgressProvider extends ChangeNotifier {
 
     _isReady = true;
     notifyListeners();
+  }
+
+  Future<void> updateUserName(String name) async {
+    final trimmed = name.trim();
+    if (trimmed.isEmpty) return;
+    _profile = _profile.copyWith(name: trimmed);
+    notifyListeners();
+    try {
+      await _storage.saveProfile(_profile);
+    } catch (_) {
+      _storageMessage = 'Não foi possível salvar os dados neste dispositivo.';
+      notifyListeners();
+    }
+  }
+
+  Future<void> updateAvatar(String avatarId) async {
+    _profile = _profile.copyWith(avatarId: avatarId);
+    notifyListeners();
+    try {
+      await _storage.saveProfile(_profile);
+    } catch (_) {
+      _storageMessage = 'Não foi possível salvar os dados neste dispositivo.';
+      notifyListeners();
+    }
   }
 
   Future<void> completeActivity(ActivityRecord record) async {

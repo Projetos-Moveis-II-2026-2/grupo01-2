@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/user_progress_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/auth_page_layout.dart';
 import '../widgets/auth_text_field.dart';
@@ -32,6 +34,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _handleLogin() {
     if (_formKey.currentState?.validate() != true) return;
+    final input = _emailController.text.trim();
+    if (input.isNotEmpty) {
+      final namePart = input.contains('@') ? input.split('@').first : input;
+      final formattedName = namePart.isNotEmpty
+          ? '${namePart[0].toUpperCase()}${namePart.substring(1)}'
+          : 'Estudante';
+      final provider = context.read<UserProgressProvider>();
+      if (provider.profile.name == 'Estudante') {
+        provider.updateUserName(formattedName);
+      }
+    }
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (_) => const HomeShell()),
       (route) => false,

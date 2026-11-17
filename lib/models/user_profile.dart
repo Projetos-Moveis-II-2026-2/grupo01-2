@@ -2,15 +2,20 @@ import 'activity_record.dart';
 
 /// Perfil local único e seus dados de desempenho.
 class UserProfile {
-  static const initial = UserProfile(name: 'Estudante');
+  static const initial = UserProfile(
+    name: 'Estudante',
+    avatarId: 'student',
+  );
 
   final String name;
+  final String avatarId;
   final int score;
   final List<ActivityRecord> activityHistory;
   final Set<String> completedActivityIds;
 
   const UserProfile({
     required this.name,
+    this.avatarId = 'student',
     this.score = 0,
     this.activityHistory = const [],
     this.completedActivityIds = const {},
@@ -35,12 +40,14 @@ class UserProfile {
 
   UserProfile copyWith({
     String? name,
+    String? avatarId,
     int? score,
     List<ActivityRecord>? activityHistory,
     Set<String>? completedActivityIds,
   }) {
     return UserProfile(
       name: name ?? this.name,
+      avatarId: avatarId ?? this.avatarId,
       score: score ?? this.score,
       activityHistory: activityHistory ?? this.activityHistory,
       completedActivityIds:
@@ -51,6 +58,7 @@ class UserProfile {
   Map<String, Object> toJson() {
     return {
       'name': name,
+      'avatarId': avatarId,
       'score': score,
       'activityHistory':
           activityHistory.map((record) => record.toJson()).toList(),
@@ -65,6 +73,7 @@ class UserProfile {
 
     return UserProfile(
       name: json['name'] as String? ?? 'Estudante',
+      avatarId: json['avatarId'] as String? ?? 'student',
       score: json['score'] as int? ?? 0,
       activityHistory: history
           .map(

@@ -1,3 +1,5 @@
+import 'difficulty.dart';
+
 /// Alternativa de escolha dentro de um cenário de "Escolha Certa".
 class ChoiceOption {
   final String label;
@@ -24,6 +26,7 @@ class ChoiceScenario {
   final List<ChoiceOption> options;
   final String? hint;
   final String? emoji;
+  final Difficulty difficulty;
 
   const ChoiceScenario({
     required this.id,
@@ -32,6 +35,7 @@ class ChoiceScenario {
     required this.options,
     this.hint,
     this.emoji,
+    this.difficulty = Difficulty.easy,
   });
 
   bool get isDiscreteTrial =>

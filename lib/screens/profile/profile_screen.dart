@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/activity_record.dart';
+import '../../models/app_avatar.dart';
 import '../../providers/user_progress_provider.dart';
 import '../../theme/app_theme.dart';
 
@@ -31,14 +32,10 @@ class ProfileScreen extends StatelessWidget {
                 Center(
                   child: Column(
                     children: [
-                      const CircleAvatar(
-                        radius: 44,
-                        backgroundColor: AppColors.primaryLight,
-                        child: Icon(
-                          Icons.person,
-                          size: 48,
-                          color: AppColors.primary,
-                        ),
+                      _AvatarButton(
+                        avatarId: profile.avatarId,
+                        onTap: () =>
+                            _showAvatarPicker(context, profile.avatarId),
                       ),
                       const SizedBox(height: 12),
                       Text(
@@ -248,4 +245,158 @@ class _NoticeCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class _AvatarButton extends StatelessWidget {
+  final String avatarId;
+  final VoidCallback onTap;
+
+  const _AvatarButton({required this.avatarId, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final avatar = AppAvatar.byId(avatarId);
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(50),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          CircleAvatar(
+            radius: 46,
+            backgroundColor: avatar.backgroundColor,
+            child: Text(
+              avatar.emoji,
+              style: const TextStyle(fontSize: 44),
+            ),
+          ),
+          Positioned(
+            right: 0,
+            bottom: 0,
+            child: Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColors.surface, width: 2.5),
+              ),
+              child: const Icon(
+                Icons.camera_alt_rounded,
+                size: 16,
+                color: AppColors.surface,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+void _showAvatarPicker(BuildContext context, String currentId) {
+  showModalBottomSheet<void>(
+    context: context,
+    backgroundColor: AppColors.surface,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+    ),
+    builder: (sheetContext) {
+      return SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 44,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: AppColors.border,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Escolha sua foto de perfil',
+                style: Theme.of(sheetContext).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Toque em um personagem para atualizar seu perfil.',
+                style: Theme.of(sheetContext).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+              ),
+              const SizedBox(height: 20),
+              Flexible(
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  itemCount: AppAvatar.all.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    mainAxisSpacing: 14,
+                    crossAxisSpacing: 14,
+                    childAspectRatio: 0.9,
+                  ),
+                  itemBuilder: (_, index) {
+                    final avatar = AppAvatar.all[index];
+                    final isSelected = avatar.id == currentId;
+
+                    return InkWell(
+                      borderRadius: BorderRadius.circular(16),
+                      onTap: () {
+                        context
+                            .read<UserProgressProvider>()
+                            .updateAvatar(avatar.id);
+                        Navigator.of(sheetContext).pop();
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: avatar.backgroundColor,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: isSelected
+                                ? AppColors.primary
+                                : Colors.transparent,
+                            width: 2.5,
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              avatar.emoji,
+                              style: const TextStyle(fontSize: 32),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              avatar.name,
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: isSelected
+                                    ? FontWeight.w800
+                                    : FontWeight.w600,
+                                color: AppColors.textPrimary,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }
