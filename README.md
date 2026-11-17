@@ -1,7 +1,7 @@
 # MercaMática — Mercadinho Matemático (Etapa 1)
 
 Protótipo navegável em Flutter do aplicativo **Mercadinho Matemático**, com
-dados 100% mockados (sem backend), cobrindo a navegação entre as telas
+dados 100% mockados, cobrindo a navegação entre as telas
 principais.
 
 ## O que está nesta entrega (Etapa 1)
@@ -41,8 +41,7 @@ Passo a passo:
 
 1. Tenha o Flutter instalado (`flutter doctor` sem erros bloqueantes).
 2. Descompacte este projeto.
-3. Na pasta do projeto, gere as pastas de plataforma (não incluídas aqui
-   para evitar conflito de versão com o seu Flutter/Gradle instalado):
+3. Na pasta do projeto, gere as pastas de plataforma:
    ```
    flutter create --platforms=android,ios,web .
    ```
@@ -64,17 +63,17 @@ Passo a passo:
 
 ```
 lib/
-  main.dart                 # App raiz (MaterialApp)
-  theme/app_theme.dart       # Cores e estilos (tema honey/mel)
-  models/                     # MathQuestion, ChoiceScenario, UserProfile
-  data/mock_data.dart         # Todos os dados mockados da Etapa 1
-  widgets/                    # AppLogo (mascote), botões reutilizáveis
+  main.dart                 
+  theme/app_theme.dart       
+  models/                     
+  data/mock_data.dart         
+  widgets/                    
   screens/
     splash_screen.dart
     welcome_screen.dart
     login_screen.dart
     signup_screen.dart
-    home_shell.dart           # Bottom navigation (3 abas)
+    home_shell.dart           
     math/                     # Matemática Básica (Adição/Subtração)
     choices/                  # Escolha Certa
     profile/                  # Perfil (placeholder)

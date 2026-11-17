@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'data/local_user_storage.dart';
 import 'providers/user_progress_provider.dart';
-import 'screens/login_screen.dart';
+import 'screens/welcome_screen.dart';
 import 'theme/app_theme.dart';
 
 Future<void> main() async {
@@ -32,7 +32,7 @@ class MercaMaticaApp extends StatelessWidget {
       title: 'MercaMática',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
-      home: const LoginScreen(),
+      home: const WelcomeScreen(),
     );
   }
 }
