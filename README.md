@@ -16,13 +16,9 @@ e um placeholder de Perfil:
   autenticação real: qualquer preenchimento válido leva à tela principal).
 - **Home (navegação por abas)** → Matemática Básica, Escolha Certa e
   Perfil, com os ícones do wireframe.
-- **Matemática Básica** → escolha entre Adição/Subtração, com 4 perguntas
-  mockadas cada, em formato de múltipla escolha, contextualizadas em
-  situações de compra (valor total, troco, desconto).
-- **Escolha Certa** → 3 situações mockadas de educação financeira, cada
-  uma com alternativas de escolha.
-- **Perfil** → tela placeholder com dados mockados, apenas para permitir a
-  navegação até essa aba.
+- **Matemática Básica** → escolha entre Adição e Subtração, com **3 níveis de dificuldade** (Fácil, Médio e Difícil) e situações contextualizadas em compras (valor total, troco, desconto).
+- **Escolha Certa** → **16 situações práticas de educação financeira** categorizadas por **níveis de dificuldade** (Fácil, Médio e Difícil), incluindo identificação de cédulas/moedas, troco, metas de cofrinho, listas de compras, comparação de marcas, honestidade no troco e economia com preparo de refeições.
+- **Perfil** → foto/avatar personalizável (com persistência local sem necessidade de banco de dados externo), exibição do progresso global, pontuação acumulada, histórico de atividades e estatísticas de acertos com/sem dica.
 - Feedback de resposta com mensagens de orientação.
 
 

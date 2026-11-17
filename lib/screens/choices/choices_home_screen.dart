@@ -1,71 +1,115 @@
 import 'package:flutter/material.dart';
-import '../../data/mock_data.dart';
-import '../../models/choice_scenario.dart';
-import '../../theme/app_theme.dart';
-import 'choice_detail_screen.dart';
 
-/// Lista de situações mockadas do módulo "Escolha Certa" (educação
-/// financeira), conforme a Etapa 1 da proposta.
+import '../../theme/app_theme.dart';
+import '../../widgets/app_header.dart';
+import 'choices_difficulty_screen.dart';
+
+/// Tela inicial do módulo "Escolha Certa" (educação financeira).
+/// Agora direciona para a tela de seleção de dificuldade.
 class ChoicesHomeScreen extends StatelessWidget {
   const ChoicesHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const scenarios = MockData.choiceScenarios;
-
     return Scaffold(
-      appBar: AppBar(title: const Text('Escolha Certa')),
-      body: ListView.separated(
-        padding: const EdgeInsets.all(20),
-        itemCount: scenarios.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 14),
-        itemBuilder: (context, index) {
-          final scenario = scenarios[index];
-          return _ScenarioCard(
-            scenario: scenario,
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => ChoiceDetailScreen(scenario: scenario),
-                ),
-              );
-            },
-          );
-        },
-      ),
-    );
-  }
-}
-
-class _ScenarioCard extends StatelessWidget {
-  final ChoiceScenario scenario;
-  final VoidCallback onTap;
-
-  const _ScenarioCard({required this.scenario, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: InkWell(
-        borderRadius: BorderRadius.circular(20),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(18),
-          child: Row(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 18, 20, 28),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const CircleAvatar(
-                radius: 24,
-                backgroundColor: AppColors.secondaryLight,
-                child: Icon(Icons.savings_outlined, color: AppColors.secondary),
+              const AppHeader(
+                title: 'Escolha Certa',
+                subtitle: 'Aprenda a tomar boas decisões financeiras!',
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  scenario.title,
-                  style: Theme.of(context).textTheme.titleMedium,
+              const SizedBox(height: 24),
+              Card(
+                clipBehavior: Clip.antiAlias,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const ChoicesDifficultyScreen(),
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 58,
+                          height: 58,
+                          decoration: BoxDecoration(
+                            color: AppColors.secondary.withValues(alpha: 0.22),
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          alignment: Alignment.center,
+                          child: const Icon(
+                            Icons.savings_rounded,
+                            color: AppColors.secondary,
+                            size: 32,
+                          ),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Situações do dia a dia',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge
+                                    ?.copyWith(fontWeight: FontWeight.w800),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Escolha o nível e pratique decisões de compra e economia.',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(color: AppColors.textSecondary),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 18,
+                          color: AppColors.textSecondary,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-              const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+              const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.secondaryLight,
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.info_outline,
+                        color: AppColors.secondary),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        'Cada nível traz situações diferentes para você '
+                        'pensar sobre dinheiro, compras e economia.',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: AppColors.textPrimary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

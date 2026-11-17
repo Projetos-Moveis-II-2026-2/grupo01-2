@@ -3,30 +3,35 @@ import 'package:provider/provider.dart';
 
 import '../../data/mock_data.dart';
 import '../../models/activity_record.dart';
+import '../../models/difficulty.dart';
 import '../../models/math_question.dart';
 import '../../providers/user_progress_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/primary_button.dart';
 
-/// Tela de exercícios de uma operação (Adição ou Subtração).
+/// Tela de exercícios de uma operação (Adição ou Subtração) com nível
+/// de dificuldade selecionado.
 ///
 /// Cada questão segue uma tentativa discreta: apresenta o estímulo, recebe
 /// uma resposta e mostra uma consequência imediata. Um erro oferece uma
 /// dica visual e mantém a questão aberta para nova tentativa.
 class MathExerciseScreen extends StatefulWidget {
   final MathOperation operation;
+  final Difficulty difficulty;
 
-  const MathExerciseScreen({super.key, required this.operation});
+  const MathExerciseScreen({
+    super.key,
+    required this.operation,
+    required this.difficulty,
+  });
 
   @override
   State<MathExerciseScreen> createState() => _MathExerciseScreenState();
 }
 
 class _MathExerciseScreenState extends State<MathExerciseScreen> {
-  late final List<MathQuestion> _questions = widget.operation ==
-          MathOperation.addition
-      ? MockData.additionQuestions
-      : MockData.subtractionQuestions;
+  late final List<MathQuestion> _questions =
+      MockData.mathQuestions(widget.operation, widget.difficulty);
 
   int _currentIndex = 0;
   int _correctCount = 0;
@@ -74,17 +79,18 @@ class _MathExerciseScreenState extends State<MathExerciseScreen> {
   }
 
   Future<void> _showSummary() async {
+    final pointsEarned = _independentCorrectAnswers *
+            UserProgressProvider.independentAnswerPoints +
+        _assistedCorrectAnswers * UserProgressProvider.assistedAnswerPoints;
+
     if (!_activityRecorded) {
       _activityRecorded = true;
-      final pointsEarned =
-          _independentCorrectAnswers *
-              UserProgressProvider.independentAnswerPoints +
-          _assistedCorrectAnswers * UserProgressProvider.assistedAnswerPoints;
-
       await context.read<UserProgressProvider>().completeActivity(
             ActivityRecord(
-              activityId: widget.operation.activityId,
-              activityName: widget.operation.label,
+              activityId:
+                  '${widget.operation.activityId}_${widget.difficulty.name}',
+              activityName:
+                  '${widget.operation.label} (${widget.difficulty.label})',
               completedAt: DateTime.now(),
               pointsEarned: pointsEarned,
               independentCorrectAnswers: _independentCorrectAnswers,
@@ -104,12 +110,25 @@ class _MathExerciseScreenState extends State<MathExerciseScreen> {
             borderRadius: BorderRadius.circular(20),
           ),
           title: const Text('Fim da atividade!'),
-          content: Text(
-            'Você acertou $_correctCount de ${_questions.length} '
-            'perguntas de ${widget.operation.label.toLowerCase()}.\n\n'
-            'Você ganhou '
-            '${_independentCorrectAnswers * UserProgressProvider.independentAnswerPoints + _assistedCorrectAnswers * UserProgressProvider.assistedAnswerPoints} pontos. '
-            'Seu progresso foi salvo.',
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Você acertou $_correctCount de ${_questions.length} '
+                'perguntas de ${widget.operation.label.toLowerCase()}.',
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Nível: ${widget.difficulty.label}',
+                style: const TextStyle(fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Você ganhou $pointsEarned pontos. '
+                'Seu progresso foi salvo.',
+              ),
+            ],
           ),
           actions: [
             TextButton(
@@ -151,8 +170,28 @@ class _MathExerciseScreenState extends State<MathExerciseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final diffColor = Color(widget.difficulty.colorValue);
+
     return Scaffold(
-      appBar: AppBar(title: Text(widget.operation.label)),
+      appBar: AppBar(
+        title: Text(widget.operation.label),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: Chip(
+              label: Text(
+                widget.difficulty.label,
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: diffColor,
+                ),
+              ),
+              backgroundColor: diffColor.withValues(alpha: 0.15),
+              side: BorderSide.none,
+            ),
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -161,7 +200,7 @@ class _MathExerciseScreenState extends State<MathExerciseScreen> {
             LinearProgressIndicator(
               value: (_currentIndex + 1) / _questions.length,
               backgroundColor: AppColors.primaryLight,
-              color: AppColors.primary,
+              color: diffColor,
               minHeight: 8,
               borderRadius: BorderRadius.circular(8),
             ),

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../models/app_avatar.dart';
+import '../providers/user_progress_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/auth_page_layout.dart';
 import '../widgets/auth_text_field.dart';
@@ -23,6 +26,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _birthDateController = TextEditingController();
+  String _selectedAvatarId = 'student';
 
   @override
   void dispose() {
@@ -35,6 +39,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void _handleSignUp() {
     if (_formKey.currentState?.validate() != true) return;
+    final provider = context.read<UserProgressProvider>();
+    if (_nameController.text.trim().isNotEmpty) {
+      provider.updateUserName(_nameController.text);
+    }
+    provider.updateAvatar(_selectedAvatarId);
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (_) => const HomeShell()),
       (route) => false,
@@ -91,7 +100,50 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               child: const Text('Já tem uma conta? Entre aqui'),
             ),
-            const SizedBox(height: 38),
+            const SizedBox(height: 24),
+            Text(
+              'Escolha seu personagem',
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textSecondary,
+                  ),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              height: 64,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: AppAvatar.all.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 10),
+                itemBuilder: (context, index) {
+                  final avatar = AppAvatar.all[index];
+                  final isSelected = avatar.id == _selectedAvatarId;
+
+                  return GestureDetector(
+                    onTap: () => setState(() => _selectedAvatarId = avatar.id),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: avatar.backgroundColor,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isSelected ? AppColors.primary : Colors.transparent,
+                          width: 3,
+                        ),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        avatar.emoji,
+                        style: const TextStyle(fontSize: 30),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 26),
             AuthTextField(
               controller: _nameController,
               label: 'Nome',

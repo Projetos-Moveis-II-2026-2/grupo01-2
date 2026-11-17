@@ -7,7 +7,7 @@ import '../../theme/app_theme.dart';
 import '../../widgets/activity_card.dart';
 import '../../widgets/app_header.dart';
 import '../../widgets/stat_badge.dart';
-import 'math_exercise_screen.dart';
+import 'difficulty_selection_screen.dart';
 
 /// Tela inicial do módulo Matemática Básica.
 class MathHomeScreen extends StatelessWidget {
@@ -57,7 +57,7 @@ class MathHomeScreen extends StatelessWidget {
                   ActivityCard(
                     operation: MathOperation.addition,
                     description: 'Junte valores e descubra o total da compra.',
-                    onPressed: () => _openExercise(
+                    onPressed: () => _openDifficultySelection(
                       context,
                       MathOperation.addition,
                     ),
@@ -66,7 +66,7 @@ class MathHomeScreen extends StatelessWidget {
                   ActivityCard(
                     operation: MathOperation.subtraction,
                     description: 'Calcule trocos e veja quanto ainda sobra.',
-                    onPressed: () => _openExercise(
+                    onPressed: () => _openDifficultySelection(
                       context,
                       MathOperation.subtraction,
                     ),
@@ -82,10 +82,11 @@ class MathHomeScreen extends StatelessWidget {
     );
   }
 
-  void _openExercise(BuildContext context, MathOperation operation) {
+  void _openDifficultySelection(
+      BuildContext context, MathOperation operation) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => MathExerciseScreen(operation: operation),
+        builder: (_) => DifficultySelectionScreen(operation: operation),
       ),
     );
   }

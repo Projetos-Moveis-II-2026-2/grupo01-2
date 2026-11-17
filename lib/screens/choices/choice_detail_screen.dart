@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../models/activity_record.dart';
 import '../../models/choice_scenario.dart';
+import '../../models/difficulty.dart';
 import '../../providers/user_progress_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/primary_button.dart';
@@ -51,14 +52,15 @@ class _ChoiceDetailScreenState extends State<ChoiceDetailScreen> {
     final independentAnswers =
         scenario.isDiscreteTrial && !_usedHint ? 1 : 0;
     final assistedAnswers = scenario.isDiscreteTrial && _usedHint ? 1 : 0;
-    _pointsEarned =
-        independentAnswers * UserProgressProvider.independentAnswerPoints +
-            assistedAnswers * UserProgressProvider.assistedAnswerPoints;
+    _pointsEarned = scenario.isDiscreteTrial
+        ? (independentAnswers * UserProgressProvider.independentAnswerPoints +
+            assistedAnswers * UserProgressProvider.assistedAnswerPoints)
+        : UserProgressProvider.independentAnswerPoints;
 
     await context.read<UserProgressProvider>().completeActivity(
           ActivityRecord(
             activityId: scenario.id,
-            activityName: scenario.title,
+            activityName: '${scenario.title} (${scenario.difficulty.label})',
             completedAt: DateTime.now(),
             pointsEarned: _pointsEarned,
             independentCorrectAnswers: independentAnswers,
@@ -71,9 +73,28 @@ class _ChoiceDetailScreenState extends State<ChoiceDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final scenario = widget.scenario;
+    final diffColor = Color(scenario.difficulty.colorValue);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Escolha Certa')),
+      appBar: AppBar(
+        title: const Text('Escolha Certa'),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: Chip(
+              label: Text(
+                scenario.difficulty.label,
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: diffColor,
+                ),
+              ),
+              backgroundColor: diffColor.withValues(alpha: 0.15),
+              side: BorderSide.none,
+            ),
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
