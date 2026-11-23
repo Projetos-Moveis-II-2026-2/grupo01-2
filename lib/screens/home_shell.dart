@@ -68,7 +68,7 @@ class _HomeShellState extends State<HomeShell> {
               NavigationDestination(
                 icon: Icon(Icons.shopping_basket_outlined),
                 selectedIcon: Icon(Icons.shopping_basket_rounded),
-                label: 'Escolha Certa',
+                label: 'Mercadinho',
               ),
               NavigationDestination(
                 icon: Icon(Icons.person_outline_rounded),

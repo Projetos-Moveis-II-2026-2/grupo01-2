@@ -8,7 +8,7 @@ import '../../providers/user_progress_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/primary_button.dart';
 
-/// Detalhe de um cenário de "Escolha Certa": apresenta a situação e as
+/// Detalhe de um cenário de "Mercadinho": apresenta a situação e as
 /// alternativas. A primeira atividade usa Tentativa Discreta, com dica
 /// visual e nova tentativa em caso de erro.
 class ChoiceDetailScreen extends StatefulWidget {
@@ -77,7 +77,7 @@ class _ChoiceDetailScreenState extends State<ChoiceDetailScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Escolha Certa'),
+        title: const Text('Mercadinho'),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16),

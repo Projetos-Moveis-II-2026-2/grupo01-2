@@ -5,10 +5,13 @@ class UserProfile {
   static const initial = UserProfile(
     name: 'Estudante',
     avatarId: 'student',
+    avatarChosen: false,
   );
 
   final String name;
   final String avatarId;
+  /// Indica se o estudante escolheu um avatar (inclusive o Estudante).
+  final bool avatarChosen;
   final int score;
   final List<ActivityRecord> activityHistory;
   final Set<String> completedActivityIds;
@@ -16,6 +19,7 @@ class UserProfile {
   const UserProfile({
     required this.name,
     this.avatarId = 'student',
+    this.avatarChosen = false,
     this.score = 0,
     this.activityHistory = const [],
     this.completedActivityIds = const {},
@@ -41,6 +45,7 @@ class UserProfile {
   UserProfile copyWith({
     String? name,
     String? avatarId,
+    bool? avatarChosen,
     int? score,
     List<ActivityRecord>? activityHistory,
     Set<String>? completedActivityIds,
@@ -48,6 +53,7 @@ class UserProfile {
     return UserProfile(
       name: name ?? this.name,
       avatarId: avatarId ?? this.avatarId,
+      avatarChosen: avatarChosen ?? this.avatarChosen,
       score: score ?? this.score,
       activityHistory: activityHistory ?? this.activityHistory,
       completedActivityIds:
@@ -59,6 +65,7 @@ class UserProfile {
     return {
       'name': name,
       'avatarId': avatarId,
+      'avatarChosen': avatarChosen,
       'score': score,
       'activityHistory':
           activityHistory.map((record) => record.toJson()).toList(),
@@ -74,6 +81,10 @@ class UserProfile {
     return UserProfile(
       name: json['name'] as String? ?? 'Estudante',
       avatarId: json['avatarId'] as String? ?? 'student',
+      // Compatibilidade com perfis antigos: um avatar diferente do padrão
+      // é considerado escolhido. O padrão antigo 'student' era ambíguo.
+      avatarChosen: json['avatarChosen'] as bool? ??
+          (json['avatarId'] is String && json['avatarId'] != 'student'),
       score: json['score'] as int? ?? 0,
       activityHistory: history
           .map(

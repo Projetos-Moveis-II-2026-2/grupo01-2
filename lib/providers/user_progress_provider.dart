@@ -92,7 +92,7 @@ class UserProgressProvider extends ChangeNotifier {
   }
 
   Future<void> updateAvatar(String avatarId) async {
-    _profile = _profile.copyWith(avatarId: avatarId);
+    _profile = _profile.copyWith(avatarId: avatarId, avatarChosen: true);
     notifyListeners();
     try {
       await _storage.saveProfile(_profile);

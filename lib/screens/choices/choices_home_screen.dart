@@ -4,7 +4,7 @@ import '../../theme/app_theme.dart';
 import '../../widgets/app_header.dart';
 import 'choices_difficulty_screen.dart';
 
-/// Tela inicial do módulo "Escolha Certa" (educação financeira).
+/// Tela inicial do módulo "Mercadinho" (educação financeira).
 /// Agora direciona para a tela de seleção de dificuldade.
 class ChoicesHomeScreen extends StatelessWidget {
   const ChoicesHomeScreen({super.key});
@@ -19,7 +19,7 @@ class ChoicesHomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const AppHeader(
-                title: 'Escolha Certa',
+                title: 'Mercadinho',
                 subtitle: 'Aprenda a tomar boas decisões financeiras!',
               ),
               const SizedBox(height: 24),

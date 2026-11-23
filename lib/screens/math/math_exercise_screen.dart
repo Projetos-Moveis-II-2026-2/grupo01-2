@@ -3,11 +3,13 @@ import 'package:provider/provider.dart';
 
 import '../../data/mock_data.dart';
 import '../../models/activity_record.dart';
+import '../../models/app_avatar.dart';
 import '../../models/difficulty.dart';
 import '../../models/math_question.dart';
 import '../../providers/user_progress_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/primary_button.dart';
+import '../../widgets/math_error_dialog.dart';
 
 /// Tela de exercícios de uma operação (Adição ou Subtração) com nível
 /// de dificuldade selecionado.
@@ -48,8 +50,13 @@ class _MathExerciseScreenState extends State<MathExerciseScreen> {
 
   void _selectOption(int option) {
     if (_answered) return;
+
+    final isCorrect = option == _currentQuestion.correctAnswer;
+    // Exibir o diálogo somente no PRIMEIRO erro desta pergunta.
+    final showErrorDialog = !isCorrect;;
+
     setState(() {
-      if (option == _currentQuestion.correctAnswer) {
+      if (isCorrect) {
         _answered = true;
         _correctCount++;
         if (_usedHint) {
@@ -63,6 +70,27 @@ class _MathExerciseScreenState extends State<MathExerciseScreen> {
         _incorrectAttempts++;
       }
     });
+
+    // O feedback embutido continua visível depois que a criança fecha o popup.
+    if (showErrorDialog) {
+      _showErrorDialog();
+    }
+  }
+
+  void _showErrorDialog() {
+    final profile = context.read<UserProgressProvider>().profile;
+    final AppAvatar? avatar = profile.avatarChosen
+        ? AppAvatar.byId(profile.avatarId)
+        : null;
+
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => MathErrorDialog(
+        avatar: avatar,
+        hint: _currentQuestion.hint,
+      ),
+    );
   }
 
   Future<void> _nextQuestion() async {

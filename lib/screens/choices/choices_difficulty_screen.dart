@@ -5,14 +5,14 @@ import '../../models/difficulty.dart';
 import '../../theme/app_theme.dart';
 import 'choice_detail_screen.dart';
 
-/// Tela de seleção de dificuldade para o módulo Escolha Certa.
+/// Tela de seleção de dificuldade para o módulo Mercadinho.
 class ChoicesDifficultyScreen extends StatelessWidget {
   const ChoicesDifficultyScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Escolha Certa')),
+      appBar: AppBar(title: const Text('Mercadinho')),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -142,7 +142,7 @@ class _ChoicesByDifficultyScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${difficulty.label} — Escolha Certa'),
+        title: Text('${difficulty.label} — Mercadinho'),
       ),
       body: ListView.separated(
         padding: const EdgeInsets.all(20),
