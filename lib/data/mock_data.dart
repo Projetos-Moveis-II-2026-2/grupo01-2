@@ -274,20 +274,20 @@ class MockData {
     ),
     ChoiceScenario(
       id: 'choice_coin_easy',
-      title: 'Qual moeda usar?',
-      description: 'O pirulito custa R\$ 2. Qual moeda você precisa?',
+      title: 'Duas moedas para o pirulito',
+      description: 'O pirulito custa R\$ 2. Com quais moedas você pode pagar?',
       emoji: '🍭',
-      hint: 'Procure a moeda que tem o mesmo valor do pirulito.',
+      hint: 'Dica: 1 + 1 = 2. Pense em duas moedas de R\$ 1.',
       difficulty: Difficulty.easy,
       options: [
         ChoiceOption(
-          label: '🪙 Moeda de R\$ 2',
-          feedback: 'Muito bem! A moeda de R\$ 2 é a correta.',
+          label: '🪙 Duas moedas de R\$ 1',
+          feedback: 'Isso mesmo! Duas moedas de R\$ 1 somam R\$ 2.',
           isCorrect: true,
         ),
         ChoiceOption(
-          label: '🪙 Moeda de R\$ 1',
-          feedback: 'Essa moeda tem um valor menor do que o preço do pirulito.',
+          label: '🪙 Uma moeda de R\$ 1',
+          feedback: 'Uma moeda de R\$ 1 ainda não paga o pirulito.',
           isCorrect: false,
         ),
       ],

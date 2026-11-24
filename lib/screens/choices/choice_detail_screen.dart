@@ -7,6 +7,10 @@ import '../../models/difficulty.dart';
 import '../../providers/user_progress_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/primary_button.dart';
+import '../../widgets/choice_token_banner.dart';
+import '../../widgets/choice_learning_dialog.dart';
+import '../../widgets/choice_unlock_dialog.dart';
+import '../math/math_home_screen.dart';
 
 /// Detalhe de um cenário de "Mercadinho": apresenta a situação e as
 /// alternativas. A primeira atividade usa Tentativa Discreta, com dica
@@ -27,6 +31,7 @@ class _ChoiceDetailScreenState extends State<ChoiceDetailScreen> {
   int _incorrectAttempts = 0;
   int _pointsEarned = 0;
   bool _activityRecorded = false;
+  bool _isUnlocking = false;
 
   Future<void> _selectOption(ChoiceOption option) async {
     if (_selected != null) return;
@@ -37,11 +42,51 @@ class _ChoiceDetailScreenState extends State<ChoiceDetailScreen> {
         _usedHint = true;
         _incorrectAttempts++;
       });
+      await _showLearningDialog(
+        title: 'Ops! Tente de novo!',
+        message: widget.scenario.hint ?? 'Olhe os valores e tente de novo.',
+        isHint: true,
+      );
       return;
     }
 
     setState(() => _selected = option);
     await _recordActivity();
+    if (!mounted) return;
+    await _showResultDialog(option);
+  }
+
+  Future<void> _showLearningDialog({
+    required String title,
+    required String message,
+    bool isHint = false,
+    String? pointsLabel,
+  }) async {
+    if (!mounted) return;
+    final profile = context.read<UserProgressProvider>().profile;
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => ChoiceLearningDialog(
+        title: title,
+        message: message,
+        isHint: isHint,
+        avatarId: profile.avatarId,
+        avatarChosen: profile.avatarChosen,
+        pointsLabel: pointsLabel,
+      ),
+    );
+  }
+
+  Future<void> _showResultDialog(ChoiceOption option) {
+    final isObjective = widget.scenario.isDiscreteTrial;
+    return _showLearningDialog(
+      title: isObjective ? 'Muito bem!' : 'Vamos pensar?',
+      message: option.feedback,
+      pointsLabel: isObjective
+          ? '+$_pointsEarned pontos pelo acerto'
+          : '+$_pointsEarned pontos pela participação',
+    );
   }
 
   Future<void> _recordActivity() async {
@@ -70,10 +115,154 @@ class _ChoiceDetailScreenState extends State<ChoiceDetailScreen> {
         );
   }
 
+  /// Confirmar antes de gastar: uma ficha é debitada apenas pelo provider.
+  Future<void> _confirmUnlock() async {
+    if (_isUnlocking) return;
+    final progress = context.read<UserProgressProvider>();
+    if (progress.isChoiceUnlocked(widget.scenario.id)) return;
+    if (!progress.isReady || progress.isChoiceUnlockInProgress) return;
+    if (progress.tokenBalance < UserProgressProvider.choiceUnlockCost) {
+      _showUnlockMessage('Você precisa de 1 ficha para desbloquear.');
+      return;
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => ChoiceUnlockDialog(balance: progress.tokenBalance),
+    );
+    if (!mounted || confirmed != true) return;
+
+    setState(() => _isUnlocking = true);
+    final result = await progress.unlockChoice(widget.scenario.id);
+    if (!mounted) return;
+    setState(() => _isUnlocking = false);
+
+    switch (result) {
+      case ChoiceUnlockResult.unlocked:
+        _showUnlockMessage('Situação desbloqueada! Você usou 1 ficha.');
+        break;
+      case ChoiceUnlockResult.alreadyUnlocked:
+        // O Consumer exibirá a atividade sem cobrar novamente.
+        break;
+      case ChoiceUnlockResult.insufficientTokens:
+        _showUnlockMessage('Suas fichas acabaram. Vamos ganhar mais?');
+        break;
+      case ChoiceUnlockResult.inProgress:
+        _showUnlockMessage('Espere a outra compra terminar.');
+        break;
+      case ChoiceUnlockResult.saveFailed:
+        _showUnlockMessage(
+          progress.storageMessage ?? 'Não foi possível salvar a compra.',
+        );
+        break;
+      case ChoiceUnlockResult.invalidChoice:
+      case ChoiceUnlockResult.notReady:
+        _showUnlockMessage('Não foi possível liberar esta situação agora.');
+        break;
+    }
+  }
+
+  void _showUnlockMessage(String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  /// Abre Matemática com uma seta visível para voltar ao Mercadinho.
+  void _openMathPractice() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => Scaffold(
+          appBar: AppBar(title: const Text('Ganhar fichas')),
+          body: const MathHomeScreen(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLockedContent(UserProgressProvider progress) {
+    final hasTokens =
+        progress.tokenBalance >= UserProgressProvider.choiceUnlockCost;
+    final scenario = widget.scenario;
+    final canUnlock = progress.isReady &&
+        !progress.isChoiceUnlockInProgress &&
+        !_isUnlocking;
+
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const ChoiceTokenBanner(),
+            const SizedBox(height: 20),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(18),
+                child: Column(
+                  children: [
+                    Text(scenario.emoji ?? '🛒',
+                        style: const TextStyle(fontSize: 42)),
+                    const SizedBox(height: 8),
+                    Text(
+                      scenario.title,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w800,
+                          ),
+                    ),
+                    const SizedBox(height: 14),
+                    const Icon(Icons.lock_outline_rounded,
+                        size: 38, color: AppColors.textSecondary),
+                    const SizedBox(height: 8),
+                    Text(
+                      hasTokens
+                          ? 'Esta atividade custa 1 ficha.'
+                          : 'Suas fichas acabaram! Que tal praticar Matemática?',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Depois, você joga de graça!',
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            if (hasTokens)
+              ElevatedButton.icon(
+                onPressed: canUnlock ? _confirmUnlock : null,
+                icon: const Icon(Icons.monetization_on_rounded),
+                label: Text(_isUnlocking
+                    ? 'Desbloqueando...'
+                    : 'Jogar por 1 ficha'),
+              )
+            else
+              ElevatedButton.icon(
+                onPressed: _openMathPractice,
+                icon: const Icon(Icons.calculate_rounded),
+                label: const Text('Ganhar fichas na Matemática'),
+              ),
+            const SizedBox(height: 10),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Voltar às situações'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final scenario = widget.scenario;
     final diffColor = Color(scenario.difficulty.colorValue);
+    final progress = context.watch<UserProgressProvider>();
+    final isUnlocked = progress.isChoiceUnlocked(scenario.id);
 
     return Scaffold(
       appBar: AppBar(
@@ -95,7 +284,9 @@ class _ChoiceDetailScreenState extends State<ChoiceDetailScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
+      body: !isUnlocked
+          ? _buildLockedContent(progress)
+          : SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,7 +321,7 @@ class _ChoiceDetailScreenState extends State<ChoiceDetailScreen> {
             if (_selected == null) ...[
               Text(
                 scenario.isDiscreteTrial
-                    ? 'Qual cédula corresponde ao preço?'
+                    ? 'Escolha a resposta:'
                     : 'O que você faria?',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
@@ -152,17 +343,21 @@ class _ChoiceDetailScreenState extends State<ChoiceDetailScreen> {
               ],
             ] else ...[
               _FeedbackCard(
-                icon: Icons.check_circle,
-                message: _usedHint
-                    ? 'Você conseguiu depois da dica! ${_selected!.feedback} '
-                        'Você recebeu $_pointsEarned pontos.'
-                    : scenario.isDiscreteTrial
-                        ? '${_selected!.feedback} '
-                            'Você recebeu $_pointsEarned pontos.'
-                        : _selected!.feedback,
+                icon: scenario.isDiscreteTrial
+                    ? Icons.check_circle_rounded
+                    : Icons.menu_book_rounded,
+                message: scenario.isDiscreteTrial
+                    ? 'Muito bem! Você ganhou $_pointsEarned pontos.'
+                    : 'Escolha registrada! Você ganhou $_pointsEarned pontos por participar.',
                 isHint: false,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                onPressed: () => _showResultDialog(_selected!),
+                icon: const Icon(Icons.lightbulb_outline_rounded),
+                label: const Text('Ler explicação de novo'),
+              ),
+              const SizedBox(height: 18),
               PrimaryButton(
                 label: 'Voltar para as situações',
                 onPressed: () => Navigator.of(context).pop(),

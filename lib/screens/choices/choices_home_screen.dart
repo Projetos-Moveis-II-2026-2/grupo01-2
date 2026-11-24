@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../theme/app_theme.dart';
 import '../../widgets/app_header.dart';
+import '../../widgets/choice_token_banner.dart';
 import 'choices_difficulty_screen.dart';
 
 /// Tela inicial do módulo "Mercadinho" (educação financeira).
@@ -22,6 +23,8 @@ class ChoicesHomeScreen extends StatelessWidget {
                 title: 'Mercadinho',
                 subtitle: 'Aprenda a tomar boas decisões financeiras!',
               ),
+              const SizedBox(height: 16),
+              const ChoiceTokenBanner(),
               const SizedBox(height: 24),
               Card(
                 clipBehavior: Clip.antiAlias,

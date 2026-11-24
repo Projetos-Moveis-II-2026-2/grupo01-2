@@ -53,7 +53,7 @@ class _MathExerciseScreenState extends State<MathExerciseScreen> {
 
     final isCorrect = option == _currentQuestion.correctAnswer;
     // Exibir o diálogo somente no PRIMEIRO erro desta pergunta.
-    final showErrorDialog = !isCorrect;;
+    final showErrorDialog = !isCorrect;
 
     setState(() {
       if (isCorrect) {
@@ -110,24 +110,24 @@ class _MathExerciseScreenState extends State<MathExerciseScreen> {
     final pointsEarned = _independentCorrectAnswers *
             UserProgressProvider.independentAnswerPoints +
         _assistedCorrectAnswers * UserProgressProvider.assistedAnswerPoints;
+    final record = ActivityRecord(
+      activityId: '${widget.operation.activityId}_${widget.difficulty.name}',
+      activityName: '${widget.operation.label} (${widget.difficulty.label})',
+      completedAt: DateTime.now(),
+      pointsEarned: pointsEarned,
+      independentCorrectAnswers: _independentCorrectAnswers,
+      assistedCorrectAnswers: _assistedCorrectAnswers,
+      incorrectAttempts: _incorrectAttempts,
+    );
+    final earnedTokens = UserProgressProvider.tokensEarnedFor(record);
 
     if (!_activityRecorded) {
+      // Evita créditos repetidos caso o resumo seja solicitado duas vezes.
       _activityRecorded = true;
-      await context.read<UserProgressProvider>().completeActivity(
-            ActivityRecord(
-              activityId:
-                  '${widget.operation.activityId}_${widget.difficulty.name}',
-              activityName:
-                  '${widget.operation.label} (${widget.difficulty.label})',
-              completedAt: DateTime.now(),
-              pointsEarned: pointsEarned,
-              independentCorrectAnswers: _independentCorrectAnswers,
-              assistedCorrectAnswers: _assistedCorrectAnswers,
-              incorrectAttempts: _incorrectAttempts,
-            ),
-          );
+      await context.read<UserProgressProvider>().completeActivity(record);
     }
     if (!mounted) return;
+    final progress = context.read<UserProgressProvider>();
 
     showDialog<void>(
       context: context,
@@ -138,25 +138,68 @@ class _MathExerciseScreenState extends State<MathExerciseScreen> {
             borderRadius: BorderRadius.circular(20),
           ),
           title: const Text('Fim da atividade!'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Você acertou $_correctCount de ${_questions.length} '
-                'perguntas de ${widget.operation.label.toLowerCase()}.',
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Nível: ${widget.difficulty.label}',
-                style: const TextStyle(fontWeight: FontWeight.w700),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Você ganhou $pointsEarned pontos. '
-                'Seu progresso foi salvo.',
-              ),
-            ],
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Você acertou $_correctCount de ${_questions.length} '
+                  'perguntas de ${widget.operation.label.toLowerCase()}.',
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Nível: ${widget.difficulty.label}',
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppColors.reward.withValues(alpha: 0.28),
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: AppColors.reward),
+                  ),
+                  child: Column(
+                    children: [
+                      const Icon(
+                        Icons.toll_rounded,
+                        color: AppColors.textPrimary,
+                        size: 40,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        '+$earnedTokens ${earnedTokens == 1 ? 'ficha' : 'fichas'}!',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.textPrimary,
+                            ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        'Saldo agora: ${progress.tokenBalance} '
+                        '${progress.tokenBalance == 1 ? 'ficha' : 'fichas'}',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  '+$pointsEarned pontos de desempenho',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                ),
+                const SizedBox(height: 8),
+                Text(progress.storageMessage ?? 'Seu progresso foi salvo.'),
+              ],
+            ),
           ),
           actions: [
             TextButton(
@@ -233,11 +276,31 @@ class _MathExerciseScreenState extends State<MathExerciseScreen> {
               borderRadius: BorderRadius.circular(8),
             ),
             const SizedBox(height: 8),
-            Text(
-              'Pergunta ${_currentIndex + 1} de ${_questions.length}',
-              style: Theme.of(context).textTheme.bodySmall,
+            Wrap(
+              spacing: 12,
+              runSpacing: 6,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Text(
+                  'Pergunta ${_currentIndex + 1} de ${_questions.length}',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                Chip(
+                  avatar: const Icon(
+                    Icons.toll_rounded,
+                    color: AppColors.textPrimary,
+                    size: 18,
+                  ),
+                  label: Text(
+                    '$_correctCount ${_correctCount == 1 ? 'ficha' : 'fichas'} ao finalizar',
+                  ),
+                  backgroundColor: AppColors.reward.withValues(alpha: 0.28),
+                  side: BorderSide.none,
+                  visualDensity: VisualDensity.compact,
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(20),
@@ -271,8 +334,8 @@ class _MathExerciseScreenState extends State<MathExerciseScreen> {
                   isHint: !_answered,
                   message: _answered
                       ? (_usedHint
-                          ? 'Boa! Você encontrou a resposta depois da dica.'
-                          : 'Muito bem! Resposta correta.')
+                          ? 'Boa! Acertou com a dica. +1 ficha ao finalizar!'
+                          : 'Muito bem! +1 ficha ao finalizar!')
                       : '${_currentQuestion.hint}. Tente novamente.',
                 ),
               ),

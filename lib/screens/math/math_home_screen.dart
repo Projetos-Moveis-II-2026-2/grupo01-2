@@ -46,7 +46,9 @@ class MathHomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 26),
+                  const SizedBox(height: 14),
+                  _TokenInfoCard(balance: progress.tokenBalance),
+                  const SizedBox(height: 22),
                   Text(
                     'Escolha uma atividade',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -87,6 +89,60 @@ class MathHomeScreen extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => DifficultySelectionScreen(operation: operation),
+      ),
+    );
+  }
+}
+
+/// Lembra como ganhar fichas e mostra o saldo sem exigir acesso ao Perfil.
+class _TokenInfoCard extends StatelessWidget {
+  final int balance;
+
+  const _TokenInfoCard({required this.balance});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.reward.withValues(alpha: 0.22),
+        border: Border.all(color: AppColors.reward),
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Row(
+        children: [
+          const CircleAvatar(
+            backgroundColor: AppColors.reward,
+            child: Icon(Icons.toll_rounded, color: AppColors.textPrimary),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Cada acerto vale 1 ficha!',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Conclua a atividade para guardar as fichas. '
+                  'Em breve, você poderá usá-las no Mercadinho.',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Seu saldo: $balance ${balance == 1 ? 'ficha' : 'fichas'}',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -53,6 +53,8 @@ class ProfileScreen extends StatelessWidget {
                 ],
                 _ProgressCard(progress: progress),
                 const SizedBox(height: 16),
+                _TokenBalanceCard(balance: progress.tokenBalance),
+                const SizedBox(height: 16),
                 LayoutBuilder(
                   builder: (context, constraints) {
                     final cardWidth = (constraints.maxWidth - 12) / 2;
@@ -147,6 +149,57 @@ class _ProgressCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Saldo em destaque; pontos e fichas são indicadores diferentes.
+class _TokenBalanceCard extends StatelessWidget {
+  final int balance;
+
+  const _TokenBalanceCard({required this.balance});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: AppColors.reward.withValues(alpha: 0.25),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: AppColors.reward),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.toll_rounded, size: 42, color: AppColors.textPrimary),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Minhas fichas',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
+                ),
+                Text(
+                  '$balance ${balance == 1 ? 'ficha' : 'fichas'}',
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.w900,
+                      ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  'Ganhe uma por acerto em Matemática. '
+                  'O uso no Mercadinho será liberado em breve.',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
