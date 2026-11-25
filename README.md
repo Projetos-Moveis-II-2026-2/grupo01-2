@@ -1,79 +1,145 @@
-# MercaMática — Mercadinho Matemático (Etapa 1)
+# MercaMática — Mercadinho Matemático
 
-Protótipo navegável em Flutter do aplicativo **Mercadinho Matemático**, com
-dados 100% mockados, cobrindo a navegação entre as telas
-principais.
+O MercaMática é um aplicativo educacional desenvolvido em Flutter que
+trabalha matemática básica e educação financeira por meio de situações
+contextualizadas em um mercadinho.
 
-## O que está nesta entrega (Etapa 1)
+O projeto usa dados locais mockados e salva o progresso no próprio
+dispositivo, sem necessidade de banco de dados externo.
 
-Para viabilizar a navegação completa
-do app desde já, também foram incluídas as telas de abertura/login/cadastro
-e um placeholder de Perfil:
+## Principais funcionalidades
 
-- **Abertura (Splash)** → logo + nome do app, navega automaticamente.
-- **Boas-vindas** → logo, slogan, botões "Criar uma conta" e "Entrar".
-- **Login / Cadastro** → formulários simples e **mockados** (não há
-  autenticação real: qualquer preenchimento válido leva à tela principal).
-- **Home (navegação por abas)** → Matemática Básica, Escolha Certa e
-  Perfil, com os ícones do wireframe.
-- **Matemática Básica** → escolha entre Adição e Subtração, com **3 níveis de dificuldade** (Fácil, Médio e Difícil) e situações contextualizadas em compras (valor total, troco, desconto).
-- **Escolha Certa** → **16 situações práticas de educação financeira** categorizadas por **níveis de dificuldade** (Fácil, Médio e Difícil), incluindo identificação de cédulas/moedas, troco, metas de cofrinho, listas de compras, comparação de marcas, honestidade no troco e economia com preparo de refeições.
-- **Perfil** → foto/avatar personalizável (com persistência local sem necessidade de banco de dados externo), exibição do progresso global, pontuação acumulada, histórico de atividades e estatísticas de acertos com/sem dica.
-- Feedback de resposta com mensagens de orientação.
+### Matemática Básica
+
+- Prática de **Adição** e **Subtração**.
+- Três níveis de dificuldade: Fácil, Médio e Difícil.
+- Perguntas contextualizadas com compras, troco, desconto e orçamento.
+- Feedback imediato após cada resposta.
+- Ao errar, o aplicativo apresenta uma dica e permite nova tentativa.
+- Acertos sem dica valem 10 pontos e acertos com dica valem 5 pontos.
+- Cada acerto em Matemática concede uma ficha ao concluir a atividade.
+
+### Mercadinho
+
+- 16 situações práticas de educação financeira.
+- Situações classificadas nos níveis Fácil, Médio e Difícil.
+- Temas como identificação de cédulas e moedas, troco, economia,
+  comparação de preços, cofrinho, listas de compras e planejamento.
+- Situações objetivas apresentam dica visual após uma resposta incorreta.
+- Situações abertas usam uma reflexão educativa em vez de “erro”.
+- Uma ficha desbloqueia uma situação; depois do desbloqueio, ela fica
+  disponível gratuitamente.
+- Cenários concluídos anteriormente permanecem desbloqueados.
+
+### Fichas e progresso
+
+- As fichas são obtidas em atividades de Matemática.
+- Cada situação do Mercadinho custa uma ficha para desbloquear.
+- Pontos, fichas e histórico são calculados pelo
+  `UserProgressProvider`.
+- O saldo e o progresso são persistidos localmente.
+- O sistema impede que uma mesma conclusão seja recompensada duas vezes.
+- Compras de desbloqueio são concluídas somente após o salvamento local
+  funcionar, evitando cobrança parcial.
+
+### Perfil
+
+- Avatar personalizável com persistência local.
+- Nome do usuário local.
+- Pontuação acumulada e número de atividades concluídas.
+- Progresso geral e barras separadas para Matemática e Mercadinho.
+- Estatísticas de acertos sem dica, acertos com dica e erros.
+- Histórico das cinco atividades mais recentes.
+- Ícones diferentes para distinguir Matemática e Mercadinho no histórico.
+- Avisos visíveis quando o carregamento ou salvamento local falhar.
+
+## Melhorias recentes
+
+- Os textos sobre fichas agora explicam como utilizá-las no Mercadinho.
+- O perfil possui progresso separado por módulo.
+- Situações concluídas aparecem como “Concluída”.
+- O histórico usa ícones específicos para cada módulo.
+- O resumo de Matemática usa uma animação ao apresentar o ganho de fichas.
+- Ao praticar novamente, perguntas e alternativas são embaralhadas.
+- A grade de respostas se adapta a telas menores e mais largas.
+- Avatares, opções e indicadores receberam melhor semântica para
+  leitores de tela.
+- O botão usado sem fichas leva diretamente ao conteúdo de prática.
+
+## Estrutura das telas
+
+- **Boas-vindas**: entrada simples no aplicativo.
+- **Matemática Básica**: escolha de operação e nível.
+- **Mercadinho**: escolha de nível e situação.
+- **Perfil**: avatar, progresso, saldo e histórico.
+- **Navegação principal**: barra inferior com Matemática, Mercadinho e
+  Perfil.
+
+O login e o cadastro das versões iniciais continuam no projeto, mas o
+perfil atual é local e único, sem autenticação externa.
 
 
 ## Como rodar
 
-Este ambiente de nuvem não tem acesso ao `storage.googleapis.com`, domínio
-usado pelo Flutter para baixar o Dart SDK/engine — por isso não foi
-possível rodar `flutter pub get` / `flutter analyze` / `flutter run` aqui
-para validar a build automaticamente. O código foi revisado
-manualmente (imports, classes, balanceamento de chaves/parênteses), mas
-peço que você rode `flutter analyze` localmente antes de considerar
-fechada a etapa — qualquer erro que aparecer, me mande a mensagem que eu
-ajusto rapidamente.
-
 Passo a passo:
 
 1. Tenha o Flutter instalado (`flutter doctor` sem erros bloqueantes).
-2. Descompacte este projeto.
-3. Na pasta do projeto, gere as pastas de plataforma:
-   ```
-   flutter create --platforms=android,ios,web .
-   ```
-   Isso **não** sobrescreve o `lib/` nem o `pubspec.yaml` já existentes.
-4. Instale as dependências:
-   ```
+2. Abra o projeto no terminal.
+3. Instale as dependências:
+   ```powershell
    flutter pub get
    ```
-5. Rode o app (mais rápido para testar: Chrome/web):
-   ```
+4. Execute no Chrome:
+   ```powershell
    flutter run -d chrome
    ```
-   ou em um emulador/dispositivo Android/iOS:
-   ```
+5. Ou execute em Android/iOS/Windows, conforme o dispositivo disponível:
+   ```powershell
    flutter run
    ```
+
+Antes de executar em uma plataforma ainda não configurada, gere os
+arquivos necessários:
+
+```powershell
+flutter create --platforms=android,ios,windows,chrome .
+flutter pub get
+```
+
+## Validação
+
+Para verificar o código e executar todos os testes:
+
+```powershell
+flutter analyze
+flutter test
+```
 
 ## Estrutura do projeto
 
 ```
 lib/
-  main.dart                 
-  theme/app_theme.dart       
-  models/                     
-  data/mock_data.dart         
-  widgets/                    
+  main.dart
+  theme/app_theme.dart
+  models/
+  data/
+    mock_data.dart
+    local_user_storage.dart
+  providers/
+    user_progress_provider.dart
+  widgets/
   screens/
     splash_screen.dart
     welcome_screen.dart
     login_screen.dart
     signup_screen.dart
-    home_shell.dart           
-    math/                     # Matemática Básica (Adição/Subtração)
-    choices/                  # Escolha Certa
-    profile/                  # Perfil (placeholder)
+    home_shell.dart
+    math/             # Adição e Subtração
+    choices/          # Situações de educação financeira
+    profile/          # Perfil, progresso e histórico
+test/
+  choice_access_widget_test.dart
+  choice_unlock_test.dart
+  token_balance_test.dart
+  widget_test.dart
 ```
-
-Sem dependências externas além do próprio Flutter SDK (`cupertino_icons`
-apenas), para minimizar o risco de conflito de versões no seu ambiente.
