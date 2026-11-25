@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
-import '../widgets/app_logo.dart';
 import '../widgets/primary_button.dart';
 import 'home_shell.dart';
 
@@ -16,27 +14,14 @@ class WelcomeScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
           child: Column(
             children: [
               const Spacer(),
-              const AppLogo(size: 110),
-              const SizedBox(height: 20),
-              Text(
-                'MercaMática',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.textPrimary,
-                    ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'Aprender a comprar também é fazer matemática!',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
+              Image.asset(
+                'assets/images/mercadinho_ilustracao_paleta.png',
+                width: double.infinity,
+                fit: BoxFit.contain,
               ),
               const Spacer(),
               PrimaryButton(
