@@ -94,8 +94,7 @@ class _ChoiceDetailScreenState extends State<ChoiceDetailScreen> {
     _activityRecorded = true;
 
     final scenario = widget.scenario;
-    final independentAnswers =
-        scenario.isDiscreteTrial && !_usedHint ? 1 : 0;
+    final independentAnswers = scenario.isDiscreteTrial && !_usedHint ? 1 : 0;
     final assistedAnswers = scenario.isDiscreteTrial && _usedHint ? 1 : 0;
     _pointsEarned = scenario.isDiscreteTrial
         ? (independentAnswers * UserProgressProvider.independentAnswerPoints +
@@ -184,9 +183,8 @@ class _ChoiceDetailScreenState extends State<ChoiceDetailScreen> {
     final hasTokens =
         progress.tokenBalance >= UserProgressProvider.choiceUnlockCost;
     final scenario = widget.scenario;
-    final canUnlock = progress.isReady &&
-        !progress.isChoiceUnlockInProgress &&
-        !_isUnlocking;
+    final canUnlock =
+        progress.isReady && !progress.isChoiceUnlockInProgress && !_isUnlocking;
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -236,9 +234,8 @@ class _ChoiceDetailScreenState extends State<ChoiceDetailScreen> {
               ElevatedButton.icon(
                 onPressed: canUnlock ? _confirmUnlock : null,
                 icon: const Icon(Icons.monetization_on_rounded),
-                label: Text(_isUnlocking
-                    ? 'Desbloqueando...'
-                    : 'Jogar por 1 ficha'),
+                label: Text(
+                    _isUnlocking ? 'Desbloqueando...' : 'Jogar por 1 ficha'),
               )
             else
               ElevatedButton.icon(
@@ -287,85 +284,85 @@ class _ChoiceDetailScreenState extends State<ChoiceDetailScreen> {
       body: !isUnlocked
           ? _buildLockedContent(progress)
           : SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              scenario.title,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 8),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(18),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      scenario.emoji ?? '🛒',
-                      style: const TextStyle(fontSize: 34),
-                    ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Text(
-                        scenario.description,
-                        style: Theme.of(context).textTheme.bodyLarge,
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    scenario.title,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 8),
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(18),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            scenario.emoji ?? '🛒',
+                            style: const TextStyle(fontSize: 34),
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Text(
+                              scenario.description,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+                  ),
+                  const SizedBox(height: 24),
+                  if (_selected == null) ...[
+                    Text(
+                      scenario.isDiscreteTrial
+                          ? 'Escolha a resposta:'
+                          : 'O que você faria?',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 16),
+                    ...scenario.options.map((option) => _ChoiceOptionButton(
+                          option: option,
+                          isDiscreteTrial: scenario.isDiscreteTrial,
+                          showHint: _showHint,
+                          onPressed: () => _selectOption(option),
+                        )),
+                    if (_showHint) ...[
+                      const SizedBox(height: 8),
+                      _FeedbackCard(
+                        icon: Icons.lightbulb_outline,
+                        message: scenario.hint ??
+                            'Observe as opções e tente novamente.',
+                        isHint: true,
+                      ),
+                    ],
+                  ] else ...[
+                    _FeedbackCard(
+                      icon: scenario.isDiscreteTrial
+                          ? Icons.check_circle_rounded
+                          : Icons.menu_book_rounded,
+                      message: scenario.isDiscreteTrial
+                          ? 'Muito bem! Você ganhou $_pointsEarned pontos.'
+                          : 'Escolha registrada! Você ganhou $_pointsEarned pontos por participar.',
+                      isHint: false,
+                    ),
+                    const SizedBox(height: 12),
+                    OutlinedButton.icon(
+                      onPressed: () => _showResultDialog(_selected!),
+                      icon: const Icon(Icons.lightbulb_outline_rounded),
+                      label: const Text('Ler explicação de novo'),
+                    ),
+                    const SizedBox(height: 18),
+                    PrimaryButton(
+                      label: 'Voltar para as situações',
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
                   ],
-                ),
+                ],
               ),
             ),
-            const SizedBox(height: 24),
-            if (_selected == null) ...[
-              Text(
-                scenario.isDiscreteTrial
-                    ? 'Escolha a resposta:'
-                    : 'O que você faria?',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 16),
-              ...scenario.options.map((option) => _ChoiceOptionButton(
-                    option: option,
-                    isDiscreteTrial: scenario.isDiscreteTrial,
-                    showHint: _showHint,
-                    onPressed: () => _selectOption(option),
-                  )),
-              if (_showHint) ...[
-                const SizedBox(height: 8),
-                _FeedbackCard(
-                  icon: Icons.lightbulb_outline,
-                  message: scenario.hint ??
-                      'Observe as opções e tente novamente.',
-                  isHint: true,
-                ),
-              ],
-            ] else ...[
-              _FeedbackCard(
-                icon: scenario.isDiscreteTrial
-                    ? Icons.check_circle_rounded
-                    : Icons.menu_book_rounded,
-                message: scenario.isDiscreteTrial
-                    ? 'Muito bem! Você ganhou $_pointsEarned pontos.'
-                    : 'Escolha registrada! Você ganhou $_pointsEarned pontos por participar.',
-                isHint: false,
-              ),
-              const SizedBox(height: 12),
-              OutlinedButton.icon(
-                onPressed: () => _showResultDialog(_selected!),
-                icon: const Icon(Icons.lightbulb_outline_rounded),
-                label: const Text('Ler explicação de novo'),
-              ),
-              const SizedBox(height: 18),
-              PrimaryButton(
-                label: 'Voltar para as situações',
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ],
-          ],
-        ),
-      ),
     );
   }
 }
@@ -388,46 +385,49 @@ class _ChoiceOptionButton extends StatelessWidget {
     final isHighlighted =
         isDiscreteTrial && showHint && option.isCorrect == true;
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Material(
-        color: isHighlighted ? AppColors.primaryLight : AppColors.surface,
-        borderRadius: BorderRadius.circular(18),
-        child: InkWell(
+    return Semantics(
+      button: true,
+      label: option.label,
+      selected: isHighlighted,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Material(
+          color: isHighlighted ? AppColors.primaryLight : AppColors.surface,
           borderRadius: BorderRadius.circular(18),
-          onTap: onPressed,
-          child: Container(
-            constraints: const BoxConstraints(minHeight: 64),
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(
-                color: isHighlighted
-                    ? AppColors.primary
-                    : AppColors.border,
-                width: 2,
-              ),
-            ),
-            alignment: Alignment.center,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (isHighlighted) ...[
-                  const Icon(Icons.check_circle_outline,
-                      color: AppColors.primary),
-                  const SizedBox(width: 8),
-                ],
-                Flexible(
-                  child: Text(
-                    option.label,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.textPrimary,
-                        ),
-                  ),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(18),
+            onTap: onPressed,
+            child: Container(
+              constraints: const BoxConstraints(minHeight: 64),
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(
+                  color: isHighlighted ? AppColors.primary : AppColors.border,
+                  width: 2,
                 ),
-              ],
+              ),
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (isHighlighted) ...[
+                    const Icon(Icons.check_circle_outline,
+                        color: AppColors.primary),
+                    const SizedBox(width: 8),
+                  ],
+                  Flexible(
+                    child: Text(
+                      option.label,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textPrimary,
+                          ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

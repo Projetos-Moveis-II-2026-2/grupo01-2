@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:math';
 
 import '../../data/mock_data.dart';
 import '../../models/activity_record.dart';
@@ -32,8 +33,7 @@ class MathExerciseScreen extends StatefulWidget {
 }
 
 class _MathExerciseScreenState extends State<MathExerciseScreen> {
-  late final List<MathQuestion> _questions =
-      MockData.mathQuestions(widget.operation, widget.difficulty);
+  late List<MathQuestion> _questions;
 
   int _currentIndex = 0;
   int _correctCount = 0;
@@ -44,6 +44,15 @@ class _MathExerciseScreenState extends State<MathExerciseScreen> {
   bool _showHint = false;
   bool _usedHint = false;
   bool _activityRecorded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _questions = MockData.mathQuestions(
+      widget.operation,
+      widget.difficulty,
+    );
+  }
 
   MathQuestion get _currentQuestion => _questions[_currentIndex];
   bool get _isLastQuestion => _currentIndex == _questions.length - 1;
@@ -79,9 +88,8 @@ class _MathExerciseScreenState extends State<MathExerciseScreen> {
 
   void _showErrorDialog() {
     final profile = context.read<UserProgressProvider>().profile;
-    final AppAvatar? avatar = profile.avatarChosen
-        ? AppAvatar.byId(profile.avatarId)
-        : null;
+    final AppAvatar? avatar =
+        profile.avatarChosen ? AppAvatar.byId(profile.avatarId) : null;
 
     showDialog<void>(
       context: context,
@@ -163,16 +171,28 @@ class _MathExerciseScreenState extends State<MathExerciseScreen> {
                   ),
                   child: Column(
                     children: [
-                      const Icon(
-                        Icons.toll_rounded,
-                        color: AppColors.textPrimary,
-                        size: 40,
+                      TweenAnimationBuilder<double>(
+                        tween: Tween(begin: 0.4, end: 1),
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.elasticOut,
+                        builder: (_, scale, child) => Transform.scale(
+                          scale: scale,
+                          child: child,
+                        ),
+                        child: const Icon(
+                          Icons.toll_rounded,
+                          color: AppColors.textPrimary,
+                          size: 40,
+                        ),
                       ),
                       const SizedBox(height: 6),
                       Text(
                         '+$earnedTokens ${earnedTokens == 1 ? 'ficha' : 'fichas'}!',
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium
+                            ?.copyWith(
                               fontWeight: FontWeight.w900,
                               color: AppColors.textPrimary,
                             ),
@@ -213,6 +233,22 @@ class _MathExerciseScreenState extends State<MathExerciseScreen> {
               onPressed: () {
                 Navigator.of(dialogContext).pop();
                 setState(() {
+                  final random = Random();
+                  _questions = MockData.mathQuestions(
+                    widget.operation,
+                    widget.difficulty,
+                  ).map((question) {
+                    final shuffledOptions = List<int>.from(question.options)
+                      ..shuffle(random);
+                    return MathQuestion(
+                      prompt: question.prompt,
+                      hint: question.hint,
+                      options: shuffledOptions,
+                      correctAnswer: question.correctAnswer,
+                      difficulty: question.difficulty,
+                    );
+                  }).toList()
+                    ..shuffle(random);
                   _currentIndex = 0;
                   _correctCount = 0;
                   _independentCorrectAnswers = 0;
@@ -312,19 +348,26 @@ class _MathExerciseScreenState extends State<MathExerciseScreen> {
             ),
             const SizedBox(height: 24),
             Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                mainAxisSpacing: 14,
-                crossAxisSpacing: 14,
-                childAspectRatio: 1.6,
-                children: _currentQuestion.options.map((option) {
-                  final color = _optionColor(option);
-                  return _OptionButton(
-                    value: option,
-                    color: color,
-                    onTap: _answered ? null : () => _selectOption(option),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final crossAxisCount = constraints.maxWidth >= 700 ? 4 : 2;
+                  final childAspectRatio =
+                      constraints.maxHeight < 420 ? 2.2 : 1.6;
+                  return GridView.count(
+                    crossAxisCount: crossAxisCount,
+                    mainAxisSpacing: 14,
+                    crossAxisSpacing: 14,
+                    childAspectRatio: childAspectRatio,
+                    children: _currentQuestion.options.map((option) {
+                      final color = _optionColor(option);
+                      return _OptionButton(
+                        value: option,
+                        color: color,
+                        onTap: _answered ? null : () => _selectOption(option),
+                      );
+                    }).toList(),
                   );
-                }).toList(),
+                },
               ),
             ),
             if (_showHint || _answered)
@@ -368,40 +411,46 @@ class _OptionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final background = color ?? AppColors.surface;
-    final foreground = AppColors.textPrimary;
+    const foreground = AppColors.textPrimary;
 
-    return Material(
-      color: background,
-      borderRadius: BorderRadius.circular(18),
-      elevation: color == null ? 1 : 0,
-      child: InkWell(
+    return Semantics(
+      button: true,
+      label: 'R\$ $value',
+      selected: color != null,
+      enabled: onTap != null,
+      child: Material(
+        color: background,
         borderRadius: BorderRadius.circular(18),
-        onTap: onTap,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(
-              color: color ?? AppColors.border,
-              width: 2,
-            ),
-          ),
-          alignment: Alignment.center,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (color != null) ...[
-                const Icon(Icons.check_circle_outline, size: 21),
-                const SizedBox(width: 6),
-              ],
-              Text(
-                'R\$ $value',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  color: foreground,
-                ),
+        elevation: color == null ? 1 : 0,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(18),
+          onTap: onTap,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: color ?? AppColors.border,
+                width: 2,
               ),
-            ],
+            ),
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (color != null) ...[
+                  const Icon(Icons.check_circle_outline, size: 21),
+                  const SizedBox(width: 6),
+                ],
+                Text(
+                  'R\$ $value',
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                    color: foreground,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

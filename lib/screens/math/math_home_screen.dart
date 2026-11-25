@@ -84,8 +84,7 @@ class MathHomeScreen extends StatelessWidget {
     );
   }
 
-  void _openDifficultySelection(
-      BuildContext context, MathOperation operation) {
+  void _openDifficultySelection(BuildContext context, MathOperation operation) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => DifficultySelectionScreen(operation: operation),
@@ -129,7 +128,7 @@ class _TokenInfoCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   'Conclua a atividade para guardar as fichas. '
-                  'Em breve, você poderá usá-las no Mercadinho.',
+                  'Use-as para desbloquear situações no Mercadinho.',
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(height: 6),

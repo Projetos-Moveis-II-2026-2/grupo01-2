@@ -37,8 +37,8 @@ class UserProgressProvider extends ChangeNotifier {
 
     final independent = record.independentCorrectAnswers;
     final assisted = record.assistedCorrectAnswers;
-    final correctAnswers = (independent > 0 ? independent : 0) +
-        (assisted > 0 ? assisted : 0);
+    final correctAnswers =
+        (independent > 0 ? independent : 0) + (assisted > 0 ? assisted : 0);
     return correctAnswers * tokensPerMathCorrectAnswer;
   }
 
@@ -140,9 +140,8 @@ class UserProgressProvider extends ChangeNotifier {
     }
   }
 
-  int get completedActivityTypes => _profile.completedActivityIds
-      .where(activityIds.contains)
-      .length;
+  int get completedActivityTypes =>
+      _profile.completedActivityIds.where(activityIds.contains).length;
   int get totalActivityTypes => activityIds.length;
   int get independentCorrectAnswers => _profile.independentCorrectAnswers;
   int get assistedCorrectAnswers => _profile.assistedCorrectAnswers;
@@ -153,6 +152,12 @@ class UserProgressProvider extends ChangeNotifier {
       : (completedActivityTypes / totalActivityTypes)
           .clamp(0.0, 1.0)
           .toDouble();
+
+  int get completedMathTypes =>
+      _profile.completedActivityIds.where(mathActivityIds.contains).length;
+
+  int get completedChoiceTypes =>
+      _profile.completedActivityIds.where(choiceActivityIds.contains).length;
 
   Future<void> load() async {
     try {

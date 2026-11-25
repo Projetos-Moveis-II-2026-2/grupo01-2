@@ -95,7 +95,8 @@ class AppTheme {
             fontSize: 18,
             fontWeight: FontWeight.w700,
           ),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           elevation: 0,
         ),
       ),
@@ -108,13 +109,15 @@ class AppTheme {
             fontSize: 18,
             fontWeight: FontWeight.w700,
           ),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.secondaryLight,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 26, vertical: 19),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 26, vertical: 19),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(32),
           borderSide: const BorderSide(color: AppColors.border),
@@ -150,10 +153,10 @@ class AppTheme {
           side: const BorderSide(color: AppColors.border),
         ),
       ),
-      navigationBarTheme: NavigationBarThemeData(
+      navigationBarTheme: const NavigationBarThemeData(
         backgroundColor: AppColors.surface,
         indicatorColor: AppColors.primaryLight,
-        labelTextStyle: const WidgetStatePropertyAll(
+        labelTextStyle: WidgetStatePropertyAll(
           TextStyle(
             color: AppColors.textPrimary,
             fontWeight: FontWeight.w600,

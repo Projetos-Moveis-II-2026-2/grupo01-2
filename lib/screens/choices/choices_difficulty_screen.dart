@@ -44,8 +44,7 @@ class ChoicesDifficultyScreen extends StatelessWidget {
                   separatorBuilder: (_, __) => const SizedBox(height: 16),
                   itemBuilder: (context, index) {
                     final difficulty = Difficulty.values[index];
-                    final scenarios =
-                        MockData.choicesByDifficulty(difficulty);
+                    final scenarios = MockData.choicesByDifficulty(difficulty);
                     return _ChoiceDifficultyCard(
                       difficulty: difficulty,
                       scenarioCount: scenarios.length,
@@ -104,19 +103,17 @@ class _ChoiceDifficultyCard extends StatelessWidget {
                   children: [
                     Text(
                       difficulty.label,
-                      style:
-                          Theme.of(context).textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.w800,
-                                color: color,
-                              ),
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            color: color,
+                          ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       '$scenarioCount situaç${scenarioCount == 1 ? 'ão' : 'ões'}',
-                      style:
-                          Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: AppColors.textSecondary,
-                              ),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
                     ),
                   ],
                 ),
@@ -164,6 +161,8 @@ class _ChoicesByDifficultyScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final scenario = scenarios[index];
                   final unlocked = progress.isChoiceUnlocked(scenario.id);
+                  final completed = progress.profile.completedActivityIds
+                      .contains(scenario.id);
                   return Card(
                     clipBehavior: Clip.antiAlias,
                     child: InkWell(
@@ -202,9 +201,11 @@ class _ChoicesByDifficultyScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 6),
                                   Text(
-                                    unlocked
-                                        ? 'Desbloqueada • jogar de graça'
-                                        : 'Desbloquear por 1 ficha',
+                                    completed
+                                        ? 'Concluída • jogar de graça'
+                                        : unlocked
+                                            ? 'Desbloqueada • jogar de graça'
+                                            : 'Desbloquear por 1 ficha',
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodySmall

@@ -27,7 +27,8 @@ class ChoiceLearningDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final avatar = AppAvatar.byId(avatarId);
-    final highlightColor = isHint ? AppColors.secondaryLight : AppColors.primaryLight;
+    final highlightColor =
+        isHint ? AppColors.secondaryLight : AppColors.primaryLight;
     final titleStyle = Theme.of(context).textTheme.titleLarge?.copyWith(
           fontWeight: FontWeight.w800,
           color: AppColors.textPrimary,
@@ -52,7 +53,7 @@ class ChoiceLearningDialog extends StatelessWidget {
             ),
             child: avatarChosen
                 ? Text(avatar.emoji, style: const TextStyle(fontSize: 38))
-                : Icon(Icons.lightbulb_rounded,
+                : const Icon(Icons.lightbulb_rounded,
                     size: 42, color: AppColors.textPrimary),
           ),
           const SizedBox(height: 12),

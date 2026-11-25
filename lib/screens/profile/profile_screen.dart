@@ -134,21 +134,75 @@ class _ProgressCard extends StatelessWidget {
           children: [
             Text('Progresso', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
-            LinearProgressIndicator(
-              value: progress.progress,
-              minHeight: 10,
-              borderRadius: BorderRadius.circular(8),
-              backgroundColor: AppColors.primaryLight,
-              color: AppColors.primary,
-            ),
-            const SizedBox(height: 8),
             Text(
               '${progress.completedActivityTypes} de '
               '${progress.totalActivityTypes} atividades diferentes concluídas',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
+            const SizedBox(height: 14),
+            _ModuleProgress(
+              label: 'Matemática',
+              completed: progress.completedMathTypes,
+              total: UserProgressProvider.mathActivityIds.length,
+              color: AppColors.primary,
+            ),
+            const SizedBox(height: 12),
+            _ModuleProgress(
+              label: 'Mercadinho',
+              completed: progress.completedChoiceTypes,
+              total: UserProgressProvider.choiceActivityIds.length,
+              color: AppColors.secondary,
+            ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _ModuleProgress extends StatelessWidget {
+  final String label;
+  final int completed;
+  final int total;
+  final Color color;
+
+  const _ModuleProgress({
+    required this.label,
+    required this.completed,
+    required this.total,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final value = total == 0 ? 0.0 : (completed / total).clamp(0.0, 1.0);
+    return Semantics(
+      label: '$label: $completed de $total atividades concluídas',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  label,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                ),
+              ),
+              Text('$completed/$total'),
+            ],
+          ),
+          const SizedBox(height: 6),
+          LinearProgressIndicator(
+            value: value,
+            minHeight: 8,
+            borderRadius: BorderRadius.circular(8),
+            backgroundColor: color.withValues(alpha: 0.18),
+            color: color,
+          ),
+        ],
       ),
     );
   }
@@ -172,7 +226,8 @@ class _TokenBalanceCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.toll_rounded, size: 42, color: AppColors.textPrimary),
+          const Icon(Icons.toll_rounded,
+              size: 42, color: AppColors.textPrimary),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -193,7 +248,7 @@ class _TokenBalanceCard extends StatelessWidget {
                 const SizedBox(height: 3),
                 Text(
                   'Ganhe uma por acerto em Matemática. '
-                  'O uso no Mercadinho será liberado em breve.',
+                  'Use suas fichas para liberar situações no Mercadinho.',
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
@@ -248,16 +303,24 @@ class _ActivityHistoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final date = record.completedAt.toLocal();
-    final dateLabel =
-        '${date.day.toString().padLeft(2, '0')}/'
+    final dateLabel = '${date.day.toString().padLeft(2, '0')}/'
         '${date.month.toString().padLeft(2, '0')}/'
         '${date.year}';
 
     return Card(
       child: ListTile(
-        leading: const CircleAvatar(
-          backgroundColor: AppColors.primaryLight,
-          child: Icon(Icons.shopping_basket_outlined, color: AppColors.primary),
+        leading: CircleAvatar(
+          backgroundColor: record.activityId.startsWith('choice')
+              ? AppColors.secondaryLight
+              : AppColors.primaryLight,
+          child: Icon(
+            record.activityId.startsWith('choice')
+                ? Icons.shopping_basket_outlined
+                : Icons.calculate_outlined,
+            color: record.activityId.startsWith('choice')
+                ? AppColors.secondary
+                : AppColors.primary,
+          ),
         ),
         title: Text(record.activityName),
         subtitle: Text(
@@ -310,38 +373,45 @@ class _AvatarButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final avatar = AppAvatar.byId(avatarId);
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(50),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          CircleAvatar(
-            radius: 46,
-            backgroundColor: avatar.backgroundColor,
-            child: Text(
-              avatar.emoji,
-              style: const TextStyle(fontSize: 44),
-            ),
-          ),
-          Positioned(
-            right: 0,
-            bottom: 0,
-            child: Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                shape: BoxShape.circle,
-                border: Border.all(color: AppColors.surface, width: 2.5),
+    return Semantics(
+      button: true,
+      label: 'Avatar ${avatar.name}. Alterar foto de perfil',
+      child: Tooltip(
+        message: 'Alterar foto de perfil',
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(50),
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              CircleAvatar(
+                radius: 46,
+                backgroundColor: avatar.backgroundColor,
+                child: Text(
+                  avatar.emoji,
+                  style: const TextStyle(fontSize: 44),
+                ),
               ),
-              child: const Icon(
-                Icons.camera_alt_rounded,
-                size: 16,
-                color: AppColors.surface,
+              Positioned(
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.surface, width: 2.5),
+                  ),
+                  child: const Icon(
+                    Icons.camera_alt_rounded,
+                    size: 16,
+                    color: AppColors.surface,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

@@ -28,7 +28,7 @@ class StatBadge extends StatelessWidget {
             BoxShadow(
               color: AppColors.textPrimary.withValues(alpha: 0.08),
               blurRadius: 8,
-              offset: Offset(0, 3),
+              offset: const Offset(0, 3),
             ),
           ],
         ),
